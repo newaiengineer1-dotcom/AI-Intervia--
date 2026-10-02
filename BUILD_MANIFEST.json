@@ -1,0 +1,58 @@
+{
+  "project": "Intervia AI — Interview Intelligence Platform",
+  "release_date": "2026-10-02",
+  "python": "3.12",
+  "architecture": "Streamlit + modular multi-agent Groq gateway",
+  "ui": {
+    "combined_interview_setup_tab": "Interview categories and Interview mode",
+    "industry_ui_removed": true,
+    "premium_dark_dashboard": true,
+    "new_interview_session_tab": true,
+    "professional_dashboard_reset": true,
+    "reset_preserves_groq_secret": true,
+    "ultra_hd_theme_palette": "#070B16 → #111827",
+    "glassmorphism_cards": true,
+    "neon_purple_cyan_glows": true,
+    "animated_waveform": true,
+    "adaptive_progress_stepper": true,
+    "ai_avatar_status_pulse": true,
+    "filler_word_highlighting": true,
+    "speech_analytics_chart": true,
+    "responsive_dashboard_layout": true,
+    "smooth_css_stage_transitions": true
+  },
+  "agents": [
+    "GroqGateway",
+    "EvidenceAgent",
+    "ResearchAgent",
+    "StrategyAgent",
+    "InterviewerAgent",
+    "CoachAgent"
+  ],
+  "features_added": [
+    "ultra_hd_dashboard_theme",
+    "new_interview_reset",
+    "ats_readiness_estimate",
+    "complete_session_pdf",
+    "animated_waveform",
+    "speech_analytics",
+    "filler_word_highlighting",
+    "adaptive_progress_stepper",
+    "executive_session_snapshot",
+    "ats_risk_flags",
+    "ats_source_format_signal",
+    "ats_parseability_signal",
+    "complete_report_snapshot_coverage",
+    "pytest_root_path_validation"
+  ],
+  "validation": "verify_project.py + py_compile + pytest (12 tests) + Evidence/Strategy/report smoke tests + ZIP integrity",
+  "runtime_validation_note": "External dependency installation and real Groq/Streamlit Cloud execution require network access and a real project API key.",
+  "validation_details": {
+    "static_compilation": "PASS",
+    "project_contracts": "PASS",
+    "pytest": "12 passed",
+    "report_smoke": "PASS",
+    "package_integrity": "PASS",
+    "live_groq_streamlit_execution": "NOT_RUN_IN_BUILD_SANDBOX"
+  }
+}
