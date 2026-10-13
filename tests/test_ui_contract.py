@@ -43,7 +43,7 @@ def test_report_contains_complete_output_sections():
 
 def test_session_snapshot_and_report_export_contracts():
     assert "build_session_snapshot" in APP
-    assert "Executive session snapshot" in APP
+    assert '<h3>📊</h3>' in APP
     assert "session_snapshot=snapshot" in APP
     assert "Executive session snapshot" in REPORT
     assert "ATS risk flags" in REPORT
@@ -53,3 +53,60 @@ def test_ats_value_additions_contract():
     evidence = (ROOT / "agent_modules" / "evidence_agent.py").read_text(encoding="utf-8")
     for token in ["risk_flags", "source_format", "parseability_signal"]:
         assert token in evidence
+
+
+def test_icon_first_command_deck_and_telemetry_contract():
+    for token in [
+        "ix-command",
+        "render_command_deck",
+        "render_session_telemetry",
+        "🎙️",
+        "🧬",
+        "🧠",
+        "📊",
+        "📑",
+        'st.markdown("#### 📈")',
+        'st.markdown("#### 🗺️")',
+        "report_completeness",
+    ]:
+        assert token in APP
+
+
+def test_snapshot_extended_analytics_contract():
+    for token in [
+        '"score_trend"',
+        '"dimension_scores"',
+        '"category_scores"',
+        '"report_completeness"',
+        '"session_health"',
+        '"model"',
+    ]:
+        assert token in APP
+    for token in [
+        "Report completeness",
+        "Performance trajectory",
+        "Dimension readiness",
+        "Category readiness",
+        "Dashboard intelligence",
+    ]:
+        assert token in REPORT
+
+
+def test_requested_streamlit_theme_contract():
+    config = (ROOT / ".streamlit" / "config.toml").read_text(encoding="utf-8")
+    for token in ['base = "dark"', 'primaryColor = "#38BDF8"', 'backgroundColor = "#04101C"', 'secondaryBackgroundColor = "#0A2540"', 'textColor = "#E6F4FF"', 'font = "sans serif"']:
+        assert token in config
+
+def test_start_interview_cannot_leave_blank_question_contract():
+    for token in [
+        'deterministic_first_question',
+        'st.session_state.question = q',
+        'st.session_state.started = True',
+        'st.session_state.degraded_mode',
+        'GroqGateway.friendly_error',
+    ]:
+        assert token in APP
+
+def test_icon_first_dashboard_contract():
+    for token in ['"🔐"', '"🎯"', '"🏢"', '"⏱️"', '"🔊"', '"🎙️"', '"🔎"', '"📷"', '"🗣️"', 'st.tabs(["🎛️", "🆕"])']:
+        assert token in APP
