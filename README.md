@@ -18,6 +18,11 @@ Additional value added without changing the core workflow:
 - Snapshot and ATS additions are included in the Markdown/PDF session report.
 - Validation harness fixed with a repository `conftest.py` so `pytest` runs from the project root reliably.
 - Release packages exclude temporary Python/test caches.
+- Icon-first command deck with Live / Evidence / Coach / Insights / Report navigation anchors.
+- Session telemetry tiles for Evidence, Engine, Autosave, Voice and ATS readiness.
+- Deterministic performance trajectory, dimension readiness and question-map views.
+- Report completeness, session health and coaching-priority signals are mirrored into session reports.
+- Sidebar setup tabs use compact icon labels while retaining the same underlying inputs.
 
 
 - **One professional Interview Design tab:** `Interview categories and Interview mode`.

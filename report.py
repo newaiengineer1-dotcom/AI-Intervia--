@@ -102,6 +102,12 @@ def build_markdown_report(
         f"Questions completed: {snapshot.get('questions_completed', len(turns))}",
         f"Category coverage: {snapshot.get('category_coverage', 'Not available')}",
         f"Priority focus: {snapshot.get('weakest_dimension', 'Not available')}",
+        f"Report completeness: {snapshot.get('report_completeness', 0)}%",
+        f"Session health: {snapshot.get('session_health', 'Not available')}",
+        f"AI engine model: {snapshot.get('model', groq_model or 'Automatic model discovery')}",
+        f"Performance trajectory: {_text(snapshot.get('score_trend', []))}",
+        f"Dimension readiness: {_text(snapshot.get('dimension_scores', {}))}",
+        f"Category readiness: {_text(snapshot.get('category_scores', {}))}",
         "",
         "## Candidate Evidence & ATS Readiness",
         f"ATS-readiness estimate: {ats.get('score', 0)}/100 — {ats.get('label', 'Not available')}",
@@ -291,6 +297,12 @@ def build_pdf_report(
         ("Questions completed", snapshot.get('questions_completed', len(turns))),
         ("Category coverage", snapshot.get('category_coverage', 'Not available')),
         ("Priority focus", snapshot.get('weakest_dimension', 'Not available')),
+        ("Report completeness", f"{snapshot.get('report_completeness', 0)}%"),
+        ("Session health", snapshot.get('session_health', 'Not available')),
+        ("AI engine model", snapshot.get('model', groq_model or 'Automatic model discovery')),
+        ("Performance trajectory", _text(snapshot.get('score_trend', []))),
+        ("Dimension readiness", _text(snapshot.get('dimension_scores', {}))),
+        ("Category readiness", _text(snapshot.get('category_scores', {}))),
     ], styles))
 
     story += _section_title("4. Candidate Evidence & ATS Readiness", styles)
@@ -364,6 +376,8 @@ def build_pdf_report(
         ("Voice outputs", "Voice transcript, speaking pace, filler-word count and speech analytics when voice answers were used."),
         ("Presentation outputs", "Camera/presentation cues when the optional snapshot was enabled and available."),
         ("Final recommendations", "Observed strengths, priority improvement actions and the recommended practice cycle."),
+        ("Dashboard intelligence", "Session health, report completeness, performance trajectory, dimension readiness, category readiness and question-by-question map derived from completed session outputs."),
+        ("UI command surfaces", "Icon-first Live, Evidence, Coach, Insights and Report navigation is a visual navigation layer; it does not replace or alter the underlying workflow controls."),
     ]
     story.append(_kv_table(coverage_rows, styles))
 

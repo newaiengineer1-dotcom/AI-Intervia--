@@ -10,7 +10,7 @@
     "new_interview_session_tab": true,
     "professional_dashboard_reset": true,
     "reset_preserves_groq_secret": true,
-    "ultra_hd_theme_palette": "#070B16 → #111827",
+    "ultra_hd_theme_palette": "#030712 → #111827",
     "glassmorphism_cards": true,
     "neon_purple_cyan_glows": true,
     "animated_waveform": true,
@@ -19,7 +19,19 @@
     "filler_word_highlighting": true,
     "speech_analytics_chart": true,
     "responsive_dashboard_layout": true,
-    "smooth_css_stage_transitions": true
+    "smooth_css_stage_transitions": true,
+    "icon_first_command_deck": true,
+    "icon_first_sidebar_tabs": true,
+    "session_telemetry_tiles": true,
+    "performance_trajectory_chart": true,
+    "dimension_readiness_chart": true,
+    "question_map": true,
+    "report_completeness_indicator": true,
+    "coaching_priority_surface": true,
+    "primary_accent": "#9D7CFF",
+    "text_color": "#F9FAFB",
+    "icon_first_inputs": true,
+    "persistent_live_session_surface": true
   },
   "agents": [
     "GroqGateway",
@@ -43,16 +55,33 @@
     "ats_source_format_signal",
     "ats_parseability_signal",
     "complete_report_snapshot_coverage",
-    "pytest_root_path_validation"
+    "pytest_root_path_validation",
+    "icon_first_command_deck",
+    "session_telemetry_tiles",
+    "performance_trajectory_chart",
+    "dimension_readiness_chart",
+    "question_map",
+    "report_completeness_indicator",
+    "coaching_priority_surface",
+    "extended_snapshot_reporting",
+    "exact_streamlit_theme_palette",
+    "icon_only_input_controls",
+    "session_start_resilience_fallback",
+    "reduced_interviewer_prompt_payload",
+    "persistent_live_question_surface"
   ],
-  "validation": "verify_project.py + py_compile + pytest (12 tests) + Evidence/Strategy/report smoke tests + ZIP integrity",
+  "validation": "verify_project.py + py_compile + pytest (17 tests) + deterministic fallback/session-start/theme/report smoke tests + ZIP integrity",
   "runtime_validation_note": "External dependency installation and real Groq/Streamlit Cloud execution require network access and a real project API key.",
   "validation_details": {
     "static_compilation": "PASS",
     "project_contracts": "PASS",
-    "pytest": "12 passed",
+    "pytest": "17 passed",
     "report_smoke": "PASS",
     "package_integrity": "PASS",
-    "live_groq_streamlit_execution": "NOT_RUN_IN_BUILD_SANDBOX"
-  }
+    "live_groq_streamlit_execution": "NOT_RUN_IN_BUILD_SANDBOX",
+    "functional_smoke": "PASS",
+    "session_start_resilience": "PASS",
+    "exact_streamlit_theme": "PASS"
+  },
+  "release_focus": "Stable session-start flow + icon-first Ultra-HD cockpit + exact dark theme + session intelligence"
 }

@@ -302,6 +302,247 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# Icon-first cockpit layer: compact navigation, status telemetry, and premium command surfaces.
+st.markdown(
+    """
+    <style>
+    .ix-command { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; margin:0 0 18px; }
+    .ix-command a { text-decoration:none !important; color:#DDE7F7 !important; min-height:62px; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:4px; border:1px solid rgba(143,161,201,.18); border-radius:16px; background:linear-gradient(145deg,rgba(17,28,49,.86),rgba(8,14,28,.88)); backdrop-filter:blur(18px); box-shadow:0 14px 34px rgba(0,0,0,.18); transition:all .2s ease; }
+    .ix-command a:hover { transform:translateY(-2px); border-color:rgba(77,225,255,.55); box-shadow:0 0 28px rgba(77,225,255,.10),0 18px 40px rgba(0,0,0,.24); }
+    .ix-icon { font-size:20px; line-height:1; }
+    .ix-label { font-size:9px; font-weight:900; letter-spacing:.11em; text-transform:uppercase; color:#AFC0D8; }
+    .ix-telemetry { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin:0 0 18px; }
+    .ix-tile { min-height:78px; padding:12px 14px; border:1px solid rgba(143,161,201,.16); border-radius:17px; background:linear-gradient(145deg,rgba(17,24,39,.82),rgba(8,13,26,.86)); backdrop-filter:blur(18px); box-shadow:0 18px 45px rgba(0,0,0,.20); }
+    .ix-tile .k { color:#8FA3C0; font-size:9px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }
+    .ix-tile .v { color:#F8FAFC; font-size:17px; font-weight:900; margin-top:5px; }
+    .ix-tile .s { color:#65E3FF; font-size:9px; font-weight:800; margin-top:2px; }
+    .ix-command-status { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; padding:10px 13px; margin:-6px 0 18px; border:1px solid rgba(77,225,255,.14); border-radius:14px; background:rgba(7,12,24,.62); color:#9FB0C8; font-size:10px; }
+    .ix-priority { padding:13px 15px; border-radius:16px; border:1px solid rgba(255,209,102,.25); background:linear-gradient(135deg,rgba(255,209,102,.08),rgba(17,24,39,.84)); }
+    .ix-priority b { color:#FFF1C4; }
+    .ix-chiprow { display:flex; gap:7px; flex-wrap:wrap; margin:8px 0 4px; }
+    .ix-chip { padding:6px 9px; border-radius:999px; border:1px solid rgba(143,161,201,.20); background:rgba(17,28,49,.72); color:#D9E4F5; font-size:9px; font-weight:850; }
+    .ix-chip.good { color:#9AF7C7; border-color:rgba(85,230,165,.28); }
+    .ix-chip.focus { color:#D8CBFF; border-color:rgba(155,124,255,.34); }
+    @media (max-width:900px){ .ix-command{grid-template-columns:repeat(2,1fr)} .ix-telemetry{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:520px){ .ix-command{grid-template-columns:1fr 1fr} .ix-telemetry{grid-template-columns:1fr 1fr} }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+# Ocean Glass theme override based on the supplied UI_THEME.py reference.
+# Styling only: no interview workflow, state, AI, report, or data logic is changed.
+st.markdown(
+    """
+    <style>
+    :root {
+      --og-bg:#04101c;
+      --og-bg2:#0a2540;
+      --og-card:rgba(14,44,76,.72);
+      --og-card-solid:#0c2945;
+      --og-line:rgba(125,211,252,.24);
+      --og-blue:#38bdf8;
+      --og-indigo:#6366f1;
+      --og-text:#e6f4ff;
+      --og-muted:#8fb4d4;
+      --og-glow:rgba(56,189,248,.28);
+      --og-input:#ffffff;
+      --og-input-text:#0f172a;
+      --og-input-border:#93c5fd;
+    }
+
+    .stApp {
+      color:var(--og-text) !important;
+      background:
+        radial-gradient(1100px 580px at 8% -12%,rgba(56,189,248,.17),transparent 62%),
+        radial-gradient(900px 520px at 100% 0%,rgba(99,102,241,.18),transparent 58%),
+        linear-gradient(145deg,#04101c 0%,#071b30 48%,#0a2540 100%) !important;
+    }
+    .main .block-container { max-width:1500px !important; }
+    [data-testid="stHeader"] { background:transparent !important; }
+    [data-testid="stSidebar"] {
+      background:linear-gradient(180deg,#08213a 0%,#06182a 100%) !important;
+      border-right:1px solid var(--og-line) !important;
+    }
+    [data-testid="stSidebar"] * { color:var(--og-text); }
+    [data-testid="stSidebar"] h1,
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3 { color:var(--og-blue) !important; }
+
+    /* Premium hero and dashboard surfaces */
+    .hero {
+      border:1px solid var(--og-line) !important;
+      background:linear-gradient(135deg,rgba(14,44,76,.94),rgba(5,20,36,.94)) !important;
+      box-shadow:0 18px 55px rgba(0,0,0,.28),inset 0 0 55px rgba(56,189,248,.045) !important;
+    }
+    .hero h1 {
+      background:linear-gradient(90deg,#38bdf8 0%,#818cf8 58%,#c4b5fd 100%) !important;
+      -webkit-background-clip:text !important;
+      background-clip:text !important;
+      color:transparent !important;
+    }
+    .hero .muted,.muted,.small,.footer { color:var(--og-muted) !important; }
+    .card,.cockpit,.uhd-card,.uhd-metric,.ix-tile,.mode-box {
+      background:linear-gradient(145deg,rgba(14,44,76,.80),rgba(5,22,39,.92)) !important;
+      border-color:var(--og-line) !important;
+      box-shadow:0 16px 42px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.025) !important;
+    }
+    .question {
+      color:var(--og-text) !important;
+      background:linear-gradient(135deg,rgba(14,44,76,.98),rgba(5,19,34,.98)) !important;
+      border-color:rgba(56,189,248,.42) !important;
+      border-left-color:var(--og-blue) !important;
+      box-shadow:0 18px 48px rgba(0,0,0,.28),0 0 28px rgba(56,189,248,.06) !important;
+    }
+    .ats-banner {
+      background:linear-gradient(105deg,rgba(56,189,248,.12),rgba(99,102,241,.16),rgba(7,27,48,.96)) !important;
+      border-color:var(--og-line) !important;
+    }
+    .uhd-topbar,.ix-command-status {
+      background:rgba(4,16,28,.82) !important;
+      border-color:var(--og-line) !important;
+    }
+    .uhd-avatar { background:linear-gradient(135deg,var(--og-blue),var(--og-indigo)) !important; }
+    .uhd-pill,.ix-chip,.category {
+      background:rgba(14,44,76,.72) !important;
+      border-color:var(--og-line) !important;
+      color:var(--og-text) !important;
+    }
+    .uhd-step,.ix-command a {
+      background:linear-gradient(145deg,rgba(14,44,76,.78),rgba(5,22,39,.9)) !important;
+      border-color:var(--og-line) !important;
+    }
+    .uhd-step.active,.stTabs [aria-selected="true"],
+    button[data-baseweb="tab"][aria-selected="true"] {
+      background:linear-gradient(100deg,var(--og-blue),var(--og-indigo)) !important;
+      border-color:transparent !important;
+      color:#04101c !important;
+      box-shadow:0 7px 24px var(--og-glow) !important;
+    }
+    .uhd-wave i { background:linear-gradient(180deg,var(--og-blue),#a5b4fc) !important; }
+    .ix-tile .s,.section-kicker { color:var(--og-blue) !important; }
+    .status.active { color:#c4b5fd !important; }
+
+    /* Consistent high-contrast typography */
+    .stApp h1,.stApp h2,.stApp h3,.stApp h4,.stApp h5,.stApp h6,
+    .stApp p,.stApp li,.stApp label,
+    .stApp [data-testid="stMarkdownContainer"] { color:var(--og-text); }
+    .stApp [data-testid="stCaptionContainer"],
+    .stApp [data-testid="stCaptionContainer"] * { color:var(--og-muted) !important; }
+    .stApp hr { border-color:var(--og-line) !important; }
+
+    /* Light data-entry surfaces inspired by INPUT_LIGHT in the reference theme. */
+    .stApp div[data-baseweb="input"],
+    .stApp div[data-baseweb="base-input"],
+    .stApp div[data-baseweb="textarea"],
+    .stApp div[data-baseweb="select"] > div,
+    .stApp [data-testid="stNumberInputContainer"],
+    .stApp [data-testid="stTextInputRootElement"],
+    .stApp [data-testid="stTextAreaRootElement"] {
+      background:var(--og-input) !important;
+      border:1.5px solid var(--og-input-border) !important;
+      border-radius:12px !important;
+    }
+    .stApp input,.stApp textarea,
+    .stApp div[data-baseweb="select"] *,
+    .stApp div[data-baseweb="select"] span {
+      color:var(--og-input-text) !important;
+      -webkit-text-fill-color:var(--og-input-text) !important;
+      caret-color:var(--og-input-text) !important;
+      font-weight:600 !important;
+    }
+    .stApp input::placeholder,.stApp textarea::placeholder {
+      color:#64748b !important;
+      -webkit-text-fill-color:#64748b !important;
+      opacity:1 !important;
+    }
+    .stApp div[data-baseweb="select"] svg,
+    .stApp [data-testid="stNumberInputContainer"] svg { fill:var(--og-input-text) !important; }
+    div[data-baseweb="popover"],div[data-baseweb="popover"] > div,
+    ul[role="listbox"],div[data-baseweb="menu"] {
+      background:#fff !important;
+      border:1.5px solid var(--og-input-border) !important;
+      border-radius:12px !important;
+    }
+    div[data-baseweb="popover"] li,div[data-baseweb="popover"] li *,
+    ul[role="listbox"] li,ul[role="listbox"] li *,
+    div[data-baseweb="menu"] li,div[data-baseweb="menu"] li * {
+      color:#0f172a !important;
+      -webkit-text-fill-color:#0f172a !important;
+    }
+    div[data-baseweb="popover"] li:hover,
+    ul[role="listbox"] li:hover,
+    ul[role="listbox"] li[aria-selected="true"] { background:#e0f2fe !important; }
+
+    /* Tabs, buttons, alerts, uploader and reports */
+    div[data-baseweb="tab-list"],.stTabs [data-baseweb="tab-list"] {
+      background:rgba(7,27,48,.92) !important;
+      border:1px solid var(--og-line) !important;
+      border-radius:15px !important;
+    }
+    button[data-baseweb="tab"] { color:var(--og-muted) !important; }
+    .stButton > button,.stDownloadButton > button {
+      border:1px solid var(--og-line) !important;
+      border-radius:12px !important;
+      color:var(--og-text) !important;
+      background:rgba(14,44,76,.74) !important;
+      transition:all .18s ease !important;
+    }
+    .stButton > button:hover,.stDownloadButton > button:hover {
+      border-color:var(--og-blue) !important;
+      box-shadow:0 0 22px var(--og-glow) !important;
+      transform:translateY(-1px);
+    }
+    .stButton > button[kind="primary"],
+    .stButton > button[kind="primary"] * {
+      color:#04101c !important;
+      background:linear-gradient(100deg,var(--og-blue),#818cf8) !important;
+      border-color:transparent !important;
+      font-weight:800 !important;
+    }
+    [data-testid="stFileUploader"] {
+      background:rgba(14,44,76,.42) !important;
+      border:1px dashed rgba(125,211,252,.42) !important;
+      border-radius:14px !important;
+    }
+    [data-testid="stFileUploaderDropzone"] {
+      background:rgba(255,255,255,.96) !important;
+      border-color:var(--og-input-border) !important;
+    }
+    [data-testid="stFileUploaderDropzone"],
+    [data-testid="stFileUploaderDropzone"] * {
+      color:#0f172a !important;
+      -webkit-text-fill-color:#0f172a !important;
+    }
+    [data-testid="stMetric"] {
+      background:linear-gradient(145deg,rgba(14,44,76,.88),rgba(5,22,39,.96)) !important;
+      border:1px solid var(--og-line) !important;
+      border-radius:15px !important;
+    }
+    [data-testid="stMetricLabel"], [data-testid="stMetricLabel"] * { color:var(--og-muted) !important; }
+    [data-testid="stMetricValue"], [data-testid="stMetricValue"] * { color:var(--og-text) !important; }
+    [data-testid="stExpander"] {
+      background:rgba(14,44,76,.45) !important;
+      border:1px solid var(--og-line) !important;
+      border-radius:14px !important;
+    }
+    [data-testid="stExpander"] summary,[data-testid="stExpander"] summary * { color:var(--og-text) !important; }
+    [data-testid="stAlert"] { border-radius:13px !important; }
+    [data-testid="stAlert"] p,[data-testid="stAlert"] div { color:var(--og-text) !important; }
+    .uhd-transcript { background:rgba(4,16,28,.82) !important; border-color:var(--og-line) !important; color:var(--og-text) !important; }
+    .footer { border-top-color:var(--og-line) !important; }
+    button:focus-visible,input:focus-visible,textarea:focus-visible,[role="radio"]:focus-visible {
+      outline:2px solid var(--og-blue) !important; outline-offset:2px !important;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,*::before,*::after { animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 
 def render_speech_controls(text: str, key: str, title: str, language: str, autoplay: bool = False):
     """Browser-native question playback. It automatically ends/cancels when the utterance ends."""
@@ -441,6 +682,73 @@ def render_ultra_topbar(model_label: str, started: bool, session_id: str):
     )
 
 
+def render_command_deck():
+    """Icon-first in-page navigation. Links are visual/navigation only and never alter session state."""
+    items = [
+        ("🎙️", "Live", "#live-studio"),
+        ("🧬", "Evidence", "#evidence-lab"),
+        ("🧠", "Coach", "#live-coaching"),
+        ("📊", "Insights", "#session-insights"),
+        ("📑", "Report", "#session-report"),
+    ]
+    html = '<nav class="ix-command" aria-label="Intervia Studio navigation">'
+    for icon, label, href in items:
+        html += f'<a href="{href}"><span class="ix-icon">{icon}</span><span class="ix-label">{label}</span></a>'
+    html += '</nav>'
+    st.markdown(html, unsafe_allow_html=True)
+
+
+def render_session_telemetry(evidence: dict | None, turns: list[dict], started: bool, model_label: str):
+    ats = (evidence or {}).get("ats_readiness", {})
+    voice_count = sum(1 for t in turns if t.get("answer_mode") == "voice")
+    autosave = "SYNCED" if turns else ("READY" if evidence else "WAITING")
+    model_short = (model_label or "AUTO").replace("openai/", "")
+    cards = [
+        ("🧬", "EVIDENCE", "READY" if evidence else "WAITING", "CV + JD grounding"),
+        ("⚡", "ENGINE", "LIVE" if started else "READY", model_short[:24]),
+        ("💾", "AUTOSAVE", autosave, "Session state"),
+        ("🎙️", "VOICE", str(voice_count), "Voice answers"),
+        ("🧾", "ATS", f"{ats.get('score', 0)}/100", "Readiness estimate"),
+    ]
+    cols = st.columns(5)
+    for col, (icon, key, value, sub) in zip(cols, cards):
+        col.markdown(f'<div class="ix-tile"><div class="k">{icon} {key}</div><div class="v">{escape(value)}</div><div class="s">{escape(sub)}</div></div>', unsafe_allow_html=True)
+
+
+def render_quality_insights(turns: list[dict]):
+    """Deterministic session analytics derived only from completed coaching outputs."""
+    scored = [t for t in turns if t.get("feedback")]
+    if not scored:
+        return
+    values = [float(t.get("feedback", {}).get("overall", 0) or 0) for t in scored]
+    dimensions = ["technical", "relevance", "evidence", "communication", "structure", "confidence"]
+    dim_avg = {}
+    for d in dimensions:
+        vals = [float(t.get("feedback", {}).get("scores", {}).get(d, 0) or 0) for t in scored]
+        dim_avg[d.title()] = round(sum(vals) / max(1, len(vals)), 1)
+    trend = {"Question": list(range(1, len(values) + 1)), "Overall": [round(v, 1) for v in values]}
+    left, right = st.columns([1.15, 1])
+    with left:
+        st.markdown("#### 📈")
+        st.line_chart(trend, x="Question", y="Overall", height=220)
+    with right:
+        st.markdown("#### 🎯")
+        dim_chart = {"Dimension": list(dim_avg.keys()), "Score": list(dim_avg.values())}
+        st.bar_chart(dim_chart, x="Dimension", y="Score", height=220)
+
+
+def render_question_map(turns: list[dict]):
+    if not turns:
+        return
+    chips = []
+    for idx, turn in enumerate(turns, 1):
+        score = turn.get("feedback", {}).get("overall", 0)
+        cat = (turn.get("category", "General") or "General").split(" ")[0]
+        cls = "good" if float(score or 0) >= 75 else ("focus" if float(score or 0) >= 60 else "")
+        chips.append(f'<span class="ix-chip {cls}">Q{idx} · {escape(cat)} · {score}</span>')
+    st.markdown("<div class='ix-chiprow'>" + "".join(chips) + "</div>", unsafe_allow_html=True)
+
+
 def render_ultra_waveform():
     bars = ''.join('<i></i>' for _ in range(10))
     st.markdown(f'<div class="uhd-wave" aria-label="Live audio waveform">{bars}</div>', unsafe_allow_html=True)
@@ -465,41 +773,64 @@ def render_speech_analytics(turns: list[dict]):
     st.bar_chart(chart_data, x="Turn", y=["WPM", "Fillers"], height=190)
 
 
-def build_session_snapshot(turns: list[dict], evidence: dict | None, categories: list[str]) -> dict:
+def build_session_snapshot(turns: list[dict], evidence: dict | None, categories: list[str], model_label: str = "") -> dict:
     """Derive a compact, reportable readiness snapshot from existing session outputs."""
     scored = [t.get("feedback", {}).get("scores", {}) for t in turns if t.get("feedback")]
-    overall_values = [t.get("feedback", {}).get("overall", 0) for t in turns if t.get("feedback")]
+    overall_values = [float(t.get("feedback", {}).get("overall", 0) or 0) for t in turns if t.get("feedback")]
     overall = round(sum(overall_values) / len(overall_values), 1) if overall_values else 0
     dimension_names = ["technical", "relevance", "evidence", "communication", "structure", "confidence"]
     dimension_avgs = {}
     for name in dimension_names:
-        vals = [float(s.get(name, 0)) for s in scored]
+        vals = [float(s.get(name, 0) or 0) for s in scored]
         dimension_avgs[name] = round(sum(vals) / len(vals), 1) if vals else 0
     weakest = min(dimension_avgs, key=dimension_avgs.get) if scored else "Not available"
     ats_score = float((evidence or {}).get("ats_readiness", {}).get("score", 0) or 0)
     covered = len({t.get("category", "General") for t in turns})
     target = max(1, len(categories or CATEGORIES))
+    category_scores = {}
+    for turn in turns:
+        cat = turn.get("category", "General")
+        category_scores.setdefault(cat, []).append(float(turn.get("feedback", {}).get("overall", 0) or 0))
+    category_averages = {k: round(sum(v) / len(v), 1) for k, v in category_scores.items() if v}
+    completeness = 0
+    if evidence:
+        completeness += 35
+    if turns:
+        completeness += 35
+    if all(t.get("feedback") for t in turns) and turns:
+        completeness += 20
+    if ats_score > 0:
+        completeness += 10
+    priority = weakest.title() if weakest != "Not available" else "Complete evidence pack first"
     return {
         "overall": overall,
         "ats_readiness": round(ats_score, 1),
         "questions_completed": len(turns),
         "category_coverage": f"{covered}/{target}",
-        "weakest_dimension": weakest.title() if weakest != "Not available" else weakest,
+        "weakest_dimension": priority,
         "dimension_scores": dimension_avgs,
+        "category_scores": category_averages,
+        "score_trend": [round(v, 1) for v in overall_values],
+        "report_completeness": min(100, completeness),
+        "session_health": "LIVE" if turns else ("EVIDENCE READY" if evidence else "READY"),
+        "model": model_label or "Automatic model discovery",
         "report_ready": bool(turns and evidence),
     }
 
 
 def render_session_snapshot(snapshot: dict):
-    st.markdown("### Executive session snapshot")
+    st.markdown('<div id="session-insights"></div><h3>📊</h3>', unsafe_allow_html=True)
     cols = st.columns(5)
-    cols[0].metric("Interview score", f"{snapshot['overall']}/100")
-    cols[1].metric("ATS readiness", f"{snapshot['ats_readiness']}/100")
-    cols[2].metric("Questions", snapshot["questions_completed"])
-    cols[3].metric("Category coverage", snapshot["category_coverage"])
-    cols[4].metric("Priority focus", snapshot["weakest_dimension"])
+    cols[0].metric("🎯 Interview", f"{snapshot['overall']}/100")
+    cols[1].metric("🧾 ATS", f"{snapshot['ats_readiness']}/100")
+    cols[2].metric("❓ Questions", snapshot["questions_completed"])
+    cols[3].metric("🧩 Coverage", snapshot["category_coverage"])
+    cols[4].metric("🔎 Focus", snapshot["weakest_dimension"])
     status = "REPORT READY" if snapshot["report_ready"] else "REPORT IN PROGRESS"
-    st.markdown(f"<div class='uhd-card' style='padding:13px 16px;margin:8px 0 18px'><span class='uhd-pill live'><span class='uhd-pulse'></span>{status}</span><span class='small' style='margin-left:10px'>Snapshot is derived only from the evidence and interview outputs already generated in this session.</span></div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='uhd-card' style='padding:13px 16px;margin:8px 0 18px'><span class='uhd-pill live'><span class='uhd-pulse'></span>{status}</span><span class='small' style='margin-left:10px'>Health: {escape(snapshot.get('session_health','READY'))} · Completeness: {snapshot.get('report_completeness',0)}% · Engine: {escape(snapshot.get('model','Automatic model discovery'))}</span></div>", unsafe_allow_html=True)
+    if snapshot.get("weakest_dimension") and snapshot.get("questions_completed"):
+        st.markdown(f"<div class='ix-priority'>💡 <b>Coaching priority:</b> strengthen <b>{escape(snapshot['weakest_dimension'])}</b> in the next practice cycle. This priority is derived from the lowest completed evaluation dimension.</div>", unsafe_allow_html=True)
+
 
 
 init_db()
@@ -523,11 +854,34 @@ DEFAULT_SESSION_STATE = {
     "reset_notice": False,
     "cv_filename": "",
     "jd_filename": "",
+    "mode_value": "Mixed",
+    "speech_language": "English (US)",
+    "answer_length": "Standard",
+    "degraded_mode": False,
+    "question_source": "AI",
+    "question_error": "",
 }
 
 for key, default in DEFAULT_SESSION_STATE.items():
     if key not in st.session_state:
         st.session_state[key] = uuid.uuid4().hex if key == "session_id" else (default[:] if isinstance(default, list) else default)
+
+
+def deterministic_first_question(target_role: str, mode: str, categories: list[str] | None) -> dict:
+    """Safe local first-question fallback so a transient model issue never leaves the session blank."""
+    selected = (categories or CATEGORIES)[0]
+    category_key = selected.lower()
+    if "behavior" in category_key:
+        question = f"Tell me about a relevant {target_role} challenge you handled, what you personally did, and what measurable result followed."
+    elif "case" in category_key or "analytical" in category_key:
+        question = f"For a {target_role} project, how would you structure your approach to diagnosing a difficult problem and choosing between competing solutions?"
+    elif "leadership" in category_key:
+        question = f"Describe a situation relevant to {target_role} where you had to align people around a difficult technical decision. What did you do and what was the outcome?"
+    elif "hr" in category_key:
+        question = f"Why are you interested in this {target_role} opportunity, and which parts of your experience best prepare you for it?"
+    else:
+        question = f"Walk me through one technically significant project relevant to {target_role}: what problem did you solve, what was your approach, and what was the measurable result?"
+    return {"category": selected, "question": question}
 
 
 def reset_interview_session():
@@ -564,72 +918,76 @@ def configured_secret(name: str, default: str = "") -> str:
 
 
 with st.sidebar:
-    st.markdown("## ✦ Intervia AI")
-    st.caption("Interview Intelligence Platform · Intervia Studio")
-    api_key = st.text_input("Groq API key", type="password", value=configured_secret("GROQ_API_KEY"), key="api_key_input")
-    target_role = st.text_input("Target role", value="Senior Renewable Energy Engineer", disabled=st.session_state.started, key="target_role_input")
-    company = st.text_input("Company / employer (optional)", value=st.session_state.company, disabled=st.session_state.started, key="company_input")
+    st.markdown("## ◈")
+    st.caption("INTERVIA AI · STUDIO")
+    api_key = st.text_input("🔐", type="password", value=configured_secret("GROQ_API_KEY"), key="api_key_input", help="Groq API key")
+    target_role = st.text_input("🎯", value="Senior Renewable Energy Engineer", disabled=st.session_state.started, key="target_role_input", help="Target role")
+    company = st.text_input("🏢", value=st.session_state.company, disabled=st.session_state.started, key="company_input", help="Company / employer (optional)")
 
-    st.markdown("### Interview Design")
-    setup_tab, new_tab = st.tabs(["Interview categories and Interview mode", "New Interview Session"])
+    st.markdown("### 🎛️")
+    setup_tab, new_tab = st.tabs(["🎛️", "🆕"])
     with setup_tab:
-        mode = st.selectbox(
-            "Interview mode",
-            ["Mixed", "Technical", "Behavioral", "Case / Situational", "HR / Screening", "Leadership"],
+        mode_map = {"🧩": "Mixed", "💻": "Technical", "🎭": "Behavioral", "📊": "Case / Situational", "🤝": "HR / Screening", "👔": "Leadership"}
+        mode_icon = st.selectbox(
+            "🎛️", list(mode_map),
+            index=list(mode_map.values()).index(st.session_state.get("mode_value", "Mixed")),
             disabled=st.session_state.started,
-            help="Controls the interviewer's primary question style. Categories below provide the specific areas to test."
-            ,key="mode_input"
+            help="Interview mode", key="mode_input"
         )
-        categories = st.multiselect(
-            "Interview categories",
-            CATEGORIES,
-            default=st.session_state.categories,
+        mode = mode_map[mode_icon]
+
+        category_map = {
+            "🎭": CATEGORIES[0], "💻": CATEGORIES[1], "🤝": CATEGORIES[2],
+            "👔": CATEGORIES[3], "📊": CATEGORIES[4], "🧠": CATEGORIES[5], "🔍": CATEGORIES[6],
+        }
+        reverse_category = {v: k for k, v in category_map.items()}
+        selected_category_icons = st.multiselect(
+            "🧩", list(category_map),
+            default=[reverse_category.get(c) for c in st.session_state.categories if c in reverse_category],
             disabled=st.session_state.started,
-            help="Select one or more categories. The adaptive strategy agent balances them as the session progresses."
-            ,key="categories_input"
+            help="Interview categories", key="categories_input"
         )
+        categories = [category_map[i] for i in selected_category_icons]
 
     with new_tab:
-        st.markdown("**Start clean, keep your Groq key.**")
-        st.caption("This resets the active interview, evidence pack, uploaded files, answers, coaching, timer and adaptive question. Your API key and project deployment remain untouched.")
+        st.markdown("**🆕**")
+        st.caption("Reset the active session without changing the API key or deployment.")
         if st.session_state.started or st.session_state.turns or st.session_state.evidence:
-            st.markdown("<div class='card'><b>Active session detected</b><br><span class='small'>A reset will create a fresh session ID and return the interview design to its defaults.</span></div>", unsafe_allow_html=True)
+            st.markdown("<div class='card'><b>●</b><br><span class='small'>Active session · reset creates a fresh session ID.</span></div>", unsafe_allow_html=True)
         else:
-            st.markdown("<div class='card'><b>Ready for a new session</b><br><span class='small'>No active interview is currently running.</span></div>", unsafe_allow_html=True)
-        confirm_reset = st.checkbox("I understand that the current interview session will be cleared.", key="confirm_reset_input")
-        if st.button("↻ Reset & Start New Interview", type="primary", use_container_width=True, disabled=not confirm_reset, key="reset_sidebar_button"):
+            st.markdown("<div class='card'><b>○</b><br><span class='small'>Ready · no active interview.</span></div>", unsafe_allow_html=True)
+        confirm_reset = st.checkbox("✓", key="confirm_reset_input", help="Confirm clearing the current interview session")
+        if st.button("↻", type="primary", use_container_width=True, disabled=not confirm_reset, key="reset_sidebar_button", help="Reset & start a new interview"):
             reset_interview_session()
             st.rerun()
 
-    duration_label = st.selectbox("Practice session duration", list(DURATIONS.keys()), index=0 if st.session_state.session_duration == 30 else list(DURATIONS.values()).index(st.session_state.session_duration), disabled=st.session_state.started, key="duration_input")
-    duration_minutes = DURATIONS[duration_label]
+    duration_options = {"◴ 30′": 30, "◷ 60′": 60, "◶ 120′": 120, "◵ 180′": 180}
+    current_duration_icon = next((k for k, v in duration_options.items() if v == st.session_state.session_duration), "◴ 30′")
+    duration_icon = st.selectbox("⏱️", list(duration_options), index=list(duration_options).index(current_duration_icon), disabled=st.session_state.started, key="duration_input", help="Session duration")
+    duration_minutes = duration_options[duration_icon]
+    duration_label = next(k for k, v in DURATIONS.items() if v == duration_minutes)
 
-    question_mode = st.radio(
-        "Question format",
-        ["Text Questions", "Audio Questions"],
-        index=0 if st.session_state.question_mode == "Text Questions" else 1,
-        disabled=st.session_state.started,
-        horizontal=True,
-        help="Text Questions shows the question on screen. Audio Questions also reads it aloud using the browser's built-in speech synthesis."
-        ,key="question_mode_input"
-    )
-    answer_mode = st.radio(
-        "Answer format",
-        ["⌨️ Type Answers", "🎙️ Speak Answers"],
-        index=0 if st.session_state.answer_mode.startswith("⌨") else 1,
-        disabled=st.session_state.started,
-        horizontal=True,
-        help="Type Answers uses a text box. Speak Answers records your microphone response and sends it to Groq Whisper for transcription."
-        ,key="answer_mode_input"
-    )
-    use_research = st.checkbox("Company / role analysis", value=False, disabled=st.session_state.started, help="Optional AI analysis of the supplied role, JD and company context. It does not invent current company facts.", key="research_input")
-    camera_enabled = st.checkbox("Camera presentation snapshot", value=st.session_state.camera_enabled, disabled=st.session_state.started, help="Optional snapshot analysis of observable framing/posture cues. It does not infer emotions or personality.", key="camera_enabled_input")
-    speech_language = st.selectbox("Question voice", ["English (US)", "English (UK)"], index=0, disabled=st.session_state.started, key="speech_language_input")
+    question_map = {"📝": "Text Questions", "🔊": "Audio Questions"}
+    question_icon = st.radio("🔊", list(question_map), index=0 if st.session_state.question_mode == "Text Questions" else 1, disabled=st.session_state.started, horizontal=True, help="Question format", key="question_mode_input")
+    question_mode = question_map[question_icon]
+
+    answer_map = {"⌨️": "⌨️ Type Answers", "🎙️": "🎙️ Speak Answers"}
+    answer_icon = st.radio("🎙️", list(answer_map), index=0 if st.session_state.answer_mode.startswith("⌨") else 1, disabled=st.session_state.started, horizontal=True, help="Answer format", key="answer_mode_input")
+    answer_mode = answer_map[answer_icon]
+
+    use_research = st.checkbox("🔎", value=False, disabled=st.session_state.started, help="Company / role analysis", key="research_input")
+    camera_enabled = st.checkbox("📷", value=st.session_state.camera_enabled, disabled=st.session_state.started, help="Camera presentation snapshot", key="camera_enabled_input")
+    language_map = {"🇺🇸": "English (US)", "🇬🇧": "English (UK)"}
+    language_icon = st.selectbox("🗣️", list(language_map), index=0 if st.session_state.get("speech_language", "English (US)") == "English (US)" else 1, disabled=st.session_state.started, key="speech_language_input", help="Question voice")
+    speech_language = language_map[language_icon]
     speech_locale = "en-US" if speech_language == "English (US)" else "en-GB"
-    answer_length = st.selectbox("AI practice-answer length", ["Short", "Standard", "Detailed"], disabled=st.session_state.started, key="answer_length_input")
+
+    length_map = {"⚡": "Short", "◼️": "Standard", "🧠": "Detailed"}
+    length_icon = st.selectbox("📝", list(length_map), index=list(length_map.values()).index(st.session_state.get("answer_length", "Standard")), disabled=st.session_state.started, key="answer_length_input", help="AI practice-answer length")
+    answer_length = length_map[length_icon]
+
     st.divider()
-    st.caption("Tip: for a realistic session, choose the modalities once here. Intervia Studio keeps them fixed for the complete session.")
-    st.caption("Production: keep secrets in Streamlit Secrets, not GitHub.")
+    st.caption("🔒 Secrets stay in Streamlit Secrets · ⚙️ Session controls lock after start.")
 
     if not st.session_state.started:
         st.session_state.session_duration = duration_minutes
@@ -637,6 +995,9 @@ with st.sidebar:
         st.session_state.answer_mode = answer_mode
         st.session_state.categories = categories or CATEGORIES[:]
         st.session_state.company = company
+        st.session_state.mode_value = mode
+        st.session_state.speech_language = speech_language
+        st.session_state.answer_length = answer_length
         st.session_state.company_track = ""
         st.session_state.camera_enabled = camera_enabled
 
@@ -644,7 +1005,7 @@ st.markdown(
     """
     <div class="hero">
       <div class="eyebrow">Intervia AI · Interview Intelligence Platform · Intervia Studio · Ultra HD Cockpit</div>
-      <h1>Practice against the job — with adaptive intelligence, text or voice.</h1>
+      <h1>◈</h1>
       <div class="muted">Choose question and answer modalities once, select a session length and interview categories, then Intervia Studio automatically adapts the Q&A pace to the remaining time.</div>
     </div>
     """,
@@ -652,6 +1013,8 @@ st.markdown(
 )
 render_ultra_topbar(st.session_state.get("groq_model") or "AUTO DISCOVERY", st.session_state.started, st.session_state.session_id)
 render_ultra_stepper(st.session_state.turns, st.session_state.started, bool(st.session_state.evidence))
+render_command_deck()
+render_session_telemetry(st.session_state.evidence, st.session_state.turns, st.session_state.started, st.session_state.get("groq_model") or "AUTO DISCOVERY")
 
 status_col, reset_col = st.columns([4, 1])
 with status_col:
@@ -663,7 +1026,7 @@ with status_col:
     else:
         st.caption("Session workspace ready · your API key is preserved when you start a new interview.")
 with reset_col:
-    if st.button("↻ New Interview", use_container_width=True, key="reset_dashboard_button", help="Clear the current interview and return to a fresh session."):
+    if st.button("↻", use_container_width=True, key="reset_dashboard_button", help="New Interview — clear the current session and return to a fresh workspace."):
         reset_interview_session()
         st.rerun()
 
@@ -672,13 +1035,13 @@ if not st.session_state.started:
 
 left, right = st.columns([1.35, 1])
 with left:
-    st.markdown("### 1. Build the evidence pack")
+    st.markdown('<div id="evidence-lab"></div><h3>🧬</h3>', unsafe_allow_html=True)
     cv_file = st.file_uploader("CV / Resume", type=["pdf", "docx", "txt"], key="cv")
     jd_file = st.file_uploader("Job Description", type=["pdf", "docx", "txt"], key="jd")
     jd_text = st.text_area("Or paste the job description", height=150, placeholder="Paste the JD here if you do not have a file.", key="jd_text_input")
     company_track = st.text_area("Optional company-specific question context", height=90, placeholder="Paste publicly sourced interview themes/questions or a company-specific question bank here. Keep it factual and non-confidential.", disabled=st.session_state.started, key="company_track_input")
 
-    if st.button("Build evidence pack", type="primary", use_container_width=True, disabled=st.session_state.started):
+    if st.button("🧬", type="primary", use_container_width=True, disabled=st.session_state.started):
         if not api_key:
             st.error("Enter a Groq API key first.")
         elif not cv_file:
@@ -714,7 +1077,7 @@ with left:
             st.success("Evidence pack created. Candidate evidence, JD requirements and role analysis remain separate.")
 
 with right:
-    st.markdown("### Agent cockpit")
+    st.markdown("### 🤖")
     for name, status in [
         ("Evidence Intelligence", "READY" if st.session_state.evidence else "WAITING"),
         ("Career & Market Research", "READY" if st.session_state.research else ("OPTIONAL" if not use_research else "WAITING")),
@@ -723,14 +1086,14 @@ with right:
         ("Performance Coach", "READY"),
     ]:
         st.markdown(f'<div class="agent"><span>{name}</span><span class="status">{status}</span></div>', unsafe_allow_html=True)
-    st.markdown("### Session design")
+    st.markdown("### ⚙️")
     model_label = st.session_state.get("groq_model") or "Automatic model discovery"
     st.markdown(f"<div class='card'><b>{duration_label}</b><br><span class='small'>Mode: {escape(mode)} · Categories: {len(categories or CATEGORIES)}</span><br><span class='small'>Questions: {escape(question_mode)} · Answers: {escape(answer_mode)}</span><br><span class='small'>Groq model: {escape(model_label)}</span><br><span class='small'>Target pacing: approximately {TARGET_QUESTIONS[duration_minutes]} core questions, automatically adjusted for answer speed and remaining time.</span></div>", unsafe_allow_html=True)
 
 if st.session_state.evidence:
     ev = st.session_state.evidence
     ats = ev.get("ats_readiness", {})
-    st.markdown("### Candidate Evidence Intelligence")
+    st.markdown("### 🧠")
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("ATS Readiness", f"{ats.get('score', 0)}/100")
     c2.metric("JD Keyword Match", f"{ats.get('keyword_match_score', 0)}/100")
@@ -746,16 +1109,16 @@ if st.session_state.evidence:
     )
     ev_left, ev_right = st.columns(2)
     with ev_left:
-        st.markdown("**ATS strengths**")
+        st.markdown("**🟢**")
         for item in ats.get("strengths", [])[:6]:
             st.markdown(f"• {escape(item)}")
-        st.markdown("**Detected headings**")
+        st.markdown("**🔤**")
         st.caption(", ".join(ats.get("detected_headings", [])) or "No conventional headings detected")
     with ev_right:
-        st.markdown("**ATS improvement recommendations**")
+        st.markdown("**💡**")
         for item in ats.get("improvements", [])[:6]:
             st.markdown(f"• {escape(item)}")
-        st.markdown("**Missing / not detected JD keywords**")
+        st.markdown("**🔎**")
         st.caption(", ".join(ats.get("missing_keywords", [])[:30]) or "No major keyword gaps detected")
     with st.expander("View complete grounding data"):
         st.write("**Candidate evidence**", ev.get("candidate_facts", []))
@@ -765,22 +1128,21 @@ if st.session_state.evidence:
         st.write("**ATS matched keywords**", ats.get("matched_keywords", []))
 
     if not st.session_state.started:
-        if st.button("🚀 Start complete adaptive interview", type="primary", use_container_width=True):
+        if st.button("🚀", type="primary", use_container_width=True, key="start_interview_button", help="Start the interview session"): 
             if not categories:
-                st.error("Select at least one interview category.")
+                st.error("🧩 Select at least one category.")
             elif not api_key:
-                st.error("Groq API key is required.")
+                st.error("🔐 Groq API key is required.")
             else:
-                gateway = GroqGateway(api_key)
-                st.session_state.groq_model = gateway.selected_model()
-                strategy = StrategyAgent()
-                interviewer = InterviewerAgent(gateway)
                 now = time.time()
-                st.session_state.started_at = now
-                elapsed, remaining, _ = duration_state(now, duration_minutes)
-                target_count = question_target(duration_minutes, elapsed, 0)
-                plan = strategy.plan([], mode, duration_label, ev, categories=categories, remaining_minutes=round(remaining/60, 1), target_questions=target_count)
                 try:
+                    gateway = GroqGateway(api_key)
+                    selected_model = gateway.selected_model()
+                    strategy = StrategyAgent()
+                    interviewer = InterviewerAgent(gateway)
+                    elapsed, remaining, _ = duration_state(now, duration_minutes)
+                    target_count = question_target(duration_minutes, elapsed, 0)
+                    plan = strategy.plan([], mode, duration_label, ev, categories=categories, remaining_minutes=round(remaining / 60, 1), target_questions=target_count)
                     q = interviewer.ask_question(
                         ev,
                         st.session_state.research,
@@ -790,23 +1152,36 @@ if st.session_state.evidence:
                         mode,
                         company=company,
                     )
-                except Exception:
-                    st.error("❌ The adaptive interview could not generate Question 1.")
-                    st.info("Check your Groq API key and model access, then try again.")
-                else:
-                    st.session_state.question = q
-                    st.session_state.started = True
-                    st.session_state.session_duration = duration_minutes
-                    st.session_state.question_mode = question_mode
-                    st.session_state.answer_mode = answer_mode
-                    st.session_state.categories = categories
-                    st.session_state.company = company
-                    st.session_state.camera_enabled = camera_enabled
-                    st.rerun()
+                    if not isinstance(q, str) or not q.strip():
+                        raise RuntimeError("The interview engine returned an empty question.")
+                    source = "AI"
+                    error_message = ""
+                except Exception as exc:
+                    # Never leave the user on a blank interview screen. Start with a deterministic,
+                    # role-grounded question and clearly mark the session as degraded until Groq recovers.
+                    selected_model = st.session_state.get("groq_model") or "AUTO DISCOVERY"
+                    q = deterministic_first_question(target_role, mode, categories)
+                    source = "LOCAL FALLBACK"
+                    error_message = GroqGateway.friendly_error(exc)
+
+                st.session_state.groq_model = selected_model
+                st.session_state.started_at = now
+                st.session_state.question = q
+                st.session_state.started = True
+                st.session_state.degraded_mode = source != "AI"
+                st.session_state.question_source = source
+                st.session_state.question_error = error_message
+                st.session_state.session_duration = duration_minutes
+                st.session_state.question_mode = question_mode
+                st.session_state.answer_mode = answer_mode
+                st.session_state.categories = categories
+                st.session_state.company = company
+                st.session_state.camera_enabled = camera_enabled
+                st.rerun()
 
 if st.session_state.started and st.session_state.question:
     st.markdown("---")
-    st.markdown("### 2. Live interview studio")
+    st.markdown('<div id="live-studio"></div><h3>🎙️</h3>', unsafe_allow_html=True)
     elapsed, remaining, expired = duration_state(st.session_state.started_at, st.session_state.session_duration)
     turn_no = len(st.session_state.turns) + 1
     target_count = question_target(st.session_state.session_duration, elapsed, len(st.session_state.turns))
@@ -823,6 +1198,11 @@ if st.session_state.started and st.session_state.question:
         st.warning("⏱️ Your selected practice session time has ended. Your report is ready below.")
         st.session_state.question = None
     else:
+        if st.session_state.get("degraded_mode"):
+            st.warning("⚠️ ENGINE FALLBACK · The session is active with a local role-grounded question. Live AI coaching will resume when Groq is available.")
+        else:
+            st.success("🟢 ENGINE LIVE · Adaptive question generated successfully.")
+
         q_obj = st.session_state.question if isinstance(st.session_state.question, dict) else {"category": "General", "question": str(st.session_state.question)}
         question_text = q_obj["question"].strip()
         category = q_obj.get("category", "General")
@@ -838,7 +1218,7 @@ if st.session_state.started and st.session_state.question:
         if st.session_state.question_mode == "Audio Questions":
             st.caption("Audio mode: the question is spoken automatically when available; playback stops automatically when the question finishes. Browser autoplay restrictions may require pressing Play once.")
 
-        st.markdown("#### Your answer")
+        st.markdown("#### ✍️")
         st.caption(f"Answer mode locked for this session: **{st.session_state.answer_mode}**")
         if st.session_state.answer_mode == "🎙️ Speak Answers":
             render_ultra_waveform()
@@ -857,7 +1237,7 @@ if st.session_state.started and st.session_state.question:
             camera = st.camera_input("Optional camera snapshot for presentation-cue feedback", key=f"camera_{turn_no}")
             st.caption("MVP camera analysis is a snapshot, not continuous video. It evaluates only observable framing/posture/camera cues; it does not infer emotions, personality, health or mental state.")
 
-        submit = st.button("Submit answer & get coaching", type="primary", use_container_width=True)
+        submit = st.button("🚀", type="primary", use_container_width=True)
         if submit:
             elapsed_now, remaining_now, expired_now = duration_state(st.session_state.started_at, st.session_state.session_duration)
             if expired_now:
@@ -937,14 +1317,16 @@ if st.session_state.started and st.session_state.question:
                                 mode,
                                 company=company,
                             )
-                        except Exception:
-                            st.error("❌ The next adaptive question could not be generated.")
-                            st.info("Your completed answer has been saved. Check Groq availability and try again.")
+                        except Exception as exc:
+                            st.session_state.question = deterministic_first_question(target_role, mode, st.session_state.categories)
+                            st.session_state.degraded_mode = True
+                            st.session_state.question_source = "LOCAL FALLBACK"
+                            st.session_state.question_error = GroqGateway.friendly_error(exc)
                     st.rerun()
 
     if st.session_state.turns:
         latest = st.session_state.turns[-1]["feedback"]
-        st.markdown("### Latest coaching")
+        st.markdown('<div id="live-coaching"></div><h3>🧠</h3>', unsafe_allow_html=True)
         cols = st.columns(6)
         for col, key, label in zip(cols, ["technical", "relevance", "evidence", "communication", "structure", "confidence"], ["Technical", "Relevance", "Evidence", "Communication", "Structure", "Confidence"]):
             col.metric(label, latest.get("scores", {}).get(key, 0))
@@ -968,7 +1350,7 @@ if st.session_state.started and st.session_state.question:
 
         render_speech_analytics(st.session_state.turns)
 
-        st.markdown("### Category readiness")
+        st.markdown("### 🧩")
         category_scores = defaultdict(list)
         for t in st.session_state.turns:
             category_scores[t.get("category", "General")].append(t.get("feedback", {}).get("overall", 0))
@@ -976,10 +1358,13 @@ if st.session_state.started and st.session_state.question:
         for idx, (cat, vals) in enumerate(category_scores.items()):
             readiness_cols[idx % len(readiness_cols)].metric(cat.split(" ")[0], round(sum(vals)/len(vals)))
 
-        snapshot = build_session_snapshot(st.session_state.turns, st.session_state.evidence, st.session_state.categories)
+        snapshot = build_session_snapshot(st.session_state.turns, st.session_state.evidence, st.session_state.categories, st.session_state.get("groq_model", ""))
         render_session_snapshot(snapshot)
+        render_quality_insights(st.session_state.turns)
+        st.markdown("#### 🗺️")
+        render_question_map(st.session_state.turns)
 
-        st.markdown("### 3. Session report")
+        st.markdown('<div id="session-report"></div><h3>📑</h3>', unsafe_allow_html=True)
         report_kwargs = dict(
             session_snapshot=snapshot,
             target_role=target_role,
@@ -1006,8 +1391,8 @@ if st.session_state.started and st.session_state.question:
         )
         md = build_markdown_report(**report_kwargs)
         pdf = build_pdf_report(**report_kwargs)
-        st.download_button("Download Markdown report", md, file_name="intervia_report.md", mime="text/markdown")
-        st.download_button("Download PDF report", pdf, file_name="intervia_report.pdf", mime="application/pdf")
+        st.download_button("⬇️", md, file_name="intervia_report.md", mime="text/markdown")
+        st.download_button("📑", pdf, file_name="intervia_report.pdf", mime="application/pdf")
 
 
 st.markdown(

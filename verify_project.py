@@ -31,8 +31,8 @@ app = (ROOT / "app.py").read_text(encoding="utf-8")
 agent_facade = (ROOT / "agents.py").read_text(encoding="utf-8")
 
 checks = {
-    "combined_setup_tab": 'Interview categories and Interview mode' in app,
-    "new_interview_tab": 'New Interview Session' in app and 'Reset & Start New Interview' in app,
+    "combined_setup_tab": 'st.tabs(["🎛️", "🆕"])' in app and 'mode_map' in app and 'category_map' in app,
+    "new_interview_tab": 'reset_sidebar_button' in app and 'reset_interview_session' in app and '🆕' in app,
     "seven_categories": "Behavioral & Situational 🎭" in app and "Reverse Interviewing" in app,
     "no_industry_input": 'st.text_input("Industry"' not in app,
     "no_raw_exception_code": "st.code(str(exc)" not in app,
@@ -49,6 +49,8 @@ checks = {
     ]),
     "automatic_model_discovery": "models.list()" in (ROOT / "agent_modules" / "groq_gateway.py").read_text(encoding="utf-8"),
     "dashboard_reset": "reset_interview_session" in app and 'reset_dashboard_button' in app,
+    "start_resilience": "deterministic_first_question" in app and "st.session_state.degraded_mode" in app and "GroqGateway.friendly_error" in app,
+    "exact_streamlit_theme": all(token in (ROOT / ".streamlit" / "config.toml").read_text(encoding="utf-8") for token in ['base = "dark"', 'primaryColor = "#38BDF8"', 'backgroundColor = "#04101C"', 'secondaryBackgroundColor = "#0A2540"', 'textColor = "#E6F4FF"']),
     "ats_resume_check": "ATS Readiness" in app and "ats_readiness" in (ROOT / "agent_modules" / "evidence_agent.py").read_text(encoding="utf-8"),
     "complete_pdf_report": "report_kwargs" in app and "Suggested better answer" in (ROOT / "report.py").read_text(encoding="utf-8") and "Session configuration" in (ROOT / "report.py").read_text(encoding="utf-8"),
     "premium_dashboard_layer": "Ultra-premium visual layer" in app and "ats-banner" in app,

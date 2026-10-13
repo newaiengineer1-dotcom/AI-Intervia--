@@ -31,3 +31,14 @@ This release was reviewed against the prior Intervia requirements carried forwar
 A build sandbox cannot prove live behavior against a user's Groq project, quota, network path, browser microphone permissions, or Streamlit Cloud deployment. Therefore this package is statically compiled and behaviorally regression-tested, but a live Groq/Streamlit/Whisper session still requires the user's real API key and deployment environment.
 
 The package does not claim that static tests can guarantee external API availability.
+
+
+## Session-start reliability hotfix — final UI release
+
+- Exact Streamlit theme verified: `#030712` background, `#111827` secondary background, `#9D7CFF` primary, `#F9FAFB` text, dark base.
+- First-question generation is now inside the same guarded startup path as model discovery.
+- A transient Groq/model failure cannot leave `question` empty: a deterministic role-grounded first question is stored and the session is explicitly marked `LOCAL FALLBACK`.
+- Next-question failures preserve continuity using the same deterministic fallback instead of clearing the current question.
+- Interviewer prompt payloads were reduced to lower token pressure and improve resilience to Groq TPM limits.
+- Icon-first inputs and dashboard headings were regression-checked.
+- Final regression suite: **17 passed**.
